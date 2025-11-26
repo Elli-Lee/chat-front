@@ -99,7 +99,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-100 via-blue-50 to-slate-100 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-b from-slate-100 via-blue-50 to-slate-100 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated background elements - Wave Gradient Style */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Wave layers */}
@@ -239,9 +239,9 @@ export default function App() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full max-w-3xl relative z-10"
+          className="w-full max-w-[820px] relative z-10"
         >
-          <div className="bg-white/40 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/50 p-12 flex flex-col items-center justify-center min-h-[500px]">
+          <div className="bg-white/40 backdrop-blur-2xl rounded-[32px] shadow-2xl border border-white/50 px-20 py-16 flex flex-col items-center justify-center">
             {/* Logo */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
@@ -252,12 +252,12 @@ export default function App() {
                 damping: 15,
                 delay: 0.1,
               }}
-              className="mb-6"
+              className="mb-10"
             >
               <img
                 src={logo}
                 alt="Okestro Logo"
-                className="w-16 h-16 object-contain"
+                className="w-[72px] h-[72px] object-contain"
               />
             </motion.div>
 
@@ -266,7 +266,7 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="text-2xl bg-gradient-to-r from-[#001f5c] to-[#003087] bg-clip-text text-transparent mb-8"
+              className="text-[28px] font-semibold bg-linear-to-r from-[#001f5c] to-[#003087] bg-clip-text text-transparent mb-12"
             >
               OKESTRO
             </motion.h1>
@@ -276,9 +276,9 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="text-center mb-12"
+              className="text-center mb-16"
             >
-              <p className="text-slate-700 text-lg">
+              <p className="text-slate-600 text-[17px] leading-relaxed">
                 플랫폼 개발본부 제품 요구사항 검색 챗봇입니다.
                 <br />
                 무엇을 도와드릴까요?
@@ -290,15 +290,15 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="w-full max-w-2xl"
+              className="w-full"
             >
-              <div className="flex gap-2 items-center bg-white/80 backdrop-blur-xl rounded-[20px] shadow-lg border border-white/80 p-2 focus-within:ring-2 focus-within:ring-[#001f5c]/20 transition-all">
+              <div className="flex gap-3 items-center bg-white/90 backdrop-blur-xl rounded-[24px] shadow-lg border border-white/80 p-3 focus-within:ring-2 focus-within:ring-[#001f5c]/20 transition-all">
                 <textarea
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="요구사항을 검색해보세요..."
-                  className="flex-1 px-4 py-2.5 bg-transparent resize-none focus:outline-none placeholder:text-slate-400 text-slate-800"
+                  className="flex-1 px-4 py-3 bg-transparent resize-none focus:outline-none placeholder:text-slate-400 text-slate-800 text-[15px]"
                   rows={1}
                   style={{ maxHeight: "120px" }}
                   autoFocus
@@ -308,7 +308,7 @@ export default function App() {
                   disabled={inputValue.trim() === ""}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-br from-[#001f5c] to-[#003087] text-white p-3 rounded-[16px] shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                  className="bg-linear-to-br from-[#001f5c] to-[#003087] text-white p-3.5 rounded-[20px] shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
                 >
                   <Send className="w-5 h-5" />
                 </motion.button>
@@ -354,7 +354,7 @@ export default function App() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2, duration: 0.5 }}
                 >
-                  <h1 className="text-lg bg-gradient-to-r from-[#001f5c] to-[#003087] bg-clip-text text-transparent">
+                  <h1 className="text-lg bg-linear-to-r from-[#001f5c] to-[#003087] bg-clip-text text-transparent">
                     OKESTRO
                   </h1>
                 </motion.div>
@@ -388,8 +388,8 @@ export default function App() {
                           {/* Glow effect */}
                           <div className="absolute inset-0 bg-blue-400/20 rounded-3xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                          <div className="relative bg-gradient-to-br from-white to-blue-50 rounded-3xl rounded-br-md px-6 py-4 shadow-md border border-blue-100/50">
-                            <p className="text-slate-800 whitespace-pre-wrap break-words">
+                          <div className="relative bg-linear-to-br from-white to-blue-50 rounded-3xl rounded-br-md px-6 py-4 shadow-md border border-blue-100/50">
+                            <p className="text-slate-800 whitespace-pre-wrap wrap-break-word">
                               {message.text}
                             </p>
                             <div className="flex items-center justify-end gap-2 mt-2">
@@ -414,13 +414,13 @@ export default function App() {
                       <div className="w-full px-2">
                         <div className="flex items-start gap-3">
                           {/* Bot avatar */}
-                          <div className="w-8 h-8 bg-gradient-to-br from-[#001f5c] to-[#003087] rounded-xl flex items-center justify-center shrink-0 shadow-md">
+                          <div className="w-8 h-8 bg-linear-to-br from-[#001f5c] to-[#003087] rounded-xl flex items-center justify-center shrink-0 shadow-md">
                             <Sparkles className="w-4 h-4 text-white" />
                           </div>
 
                           {/* Message content */}
                           <div className="flex-1 min-w-0">
-                            <p className="text-slate-800 whitespace-pre-wrap break-words leading-relaxed">
+                            <p className="text-slate-800 whitespace-pre-wrap wrap-break-word leading-relaxed">
                               {message.text}
                               {message.isStreaming && (
                                 <motion.span
@@ -504,7 +504,7 @@ export default function App() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="요구사항을 검색��보세요..."
+                    placeholder="요구사항을 검색해보세요..."
                     className="flex-1 px-4 py-2.5 bg-transparent resize-none focus:outline-none placeholder:text-slate-400 text-slate-800"
                     rows={1}
                     style={{ maxHeight: "120px" }}
@@ -514,7 +514,7 @@ export default function App() {
                     disabled={inputValue.trim() === ""}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-gradient-to-br from-[#001f5c] to-[#003087] text-white p-3 rounded-[16px] shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                    className="bg-linear-to-br from-[#001f5c] to-[#003087] text-white p-3 rounded-[16px] shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
                   >
                     <Send className="w-5 h-5" />
                   </motion.button>
