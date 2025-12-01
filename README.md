@@ -1,73 +1,97 @@
-# React + TypeScript + Vite
+# OKESTRO 제품 요구사항 검색 챗봇
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+오케스트로 플랫폼 개발본부 제품 요구사항 검색을 위한 AI 챗봇 인터페이스입니다.
 
-Currently, two official plugins are available:
+## 기술 스택
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19.2.0** + **TypeScript**
+- **Vite** - 빌드 도구
+- **Tailwind CSS 4.1.17** - 스타일링
+- **Motion (Framer Motion)** - 애니메이션
+- **Lucide React** - 아이콘
 
-## React Compiler
+## 주요 기능
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 실시간 SSE(Server-Sent Events) 스트리밍 챗봇
+- 응답 타이핑 효과 (글자 단위 스트리밍)
+- Glass morphism 디자인
+- 애니메이션 배경 효과
+- 반응형 UI
 
-## Expanding the ESLint configuration
+## 시작하기
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. 의존성 설치
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. 환경변수 설정
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+`.env` 파일을 생성하고 백엔드 API URL을 설정합니다:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
+
+### 3. 개발 서버 실행
+
+```bash
+pnpm dev
+```
+
+브라우저에서 `http://localhost:5173`으로 접속합니다.
+
+## API 명세
+
+### POST `/chat`
+
+채팅 메시지를 전송하고 SSE를 통해 스트리밍 응답을 받습니다.
+
+**Request Body:**
+```json
+{
+  "message": "사용자 메시지"
+}
+```
+
+**Response (SSE Stream):**
+```
+data: {"status": "streaming", "message": "안녕하세요"}
+data: {"status": "streaming", "message": "안녕하세요 좋은"}
+data: {"status": "streaming", "message": "안녕하세요 좋은 하루"}
+data: {"status": "completed"}
+```
+
+- `status: "streaming"`: 스트리밍 중 (message 필드에 누적된 텍스트 포함)
+- `status: "completed"`: 스트리밍 완료
+
+## 프로젝트 구조
+
+```
+src/
+├── api/
+│   └── chat.ts          # SSE 채팅 API 클라이언트
+├── hooks/
+│   └── useChat.ts       # 채팅 로직 커스텀 훅
+├── assets/
+│   └── logo.png         # 오케스트로 로고
+├── styles/
+│   └── global.css       # 전역 스타일
+├── App.tsx              # 메인 컴포넌트
+└── main.tsx             # 진입점
+```
+
+## 빌드
+
+```bash
+pnpm build
+```
+
+빌드된 파일은 `dist/` 디렉토리에 생성됩니다.
+
+## 미리보기
+
+```bash
+pnpm preview
 ```

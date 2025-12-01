@@ -2,26 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import logo from "./assets/logo.png";
-
-interface Message {
-  id: string;
-  text: string;
-  sender: "user" | "bot";
-  timestamp: Date;
-  isStreaming?: boolean;
-}
+import { useChat } from "./hooks/useChat";
 
 export default function App() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      text: "안녕하세요! 오케스트로 제품 요구사항 검색 챗봇입니다. 무엇을 도와드릴까요?",
-      sender: "bot",
-      timestamp: new Date(),
-    },
-  ]);
+  const { messages, isTyping, sendMessage } = useChat();
   const [inputValue, setInputValue] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
   const [chatStarted, setChatStarted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -41,54 +26,9 @@ export default function App() {
       setChatStarted(true);
     }
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputValue,
-      sender: "user",
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
+    // API를 통해 메시지 전송
+    sendMessage(inputValue);
     setInputValue("");
-    setIsTyping(true);
-
-    // SSE 스트리밍 시뮬레이션
-    setTimeout(() => {
-      setIsTyping(false);
-      const botMessageId = (Date.now() + 1).toString();
-      const fullResponse =
-        "제품 요구사항을 검색한 결과입니다. 오케스트로의 클라우드 관리 플랫폼은 다음과 같은 기능들을 포함하고 있습니다: 멀티 클라우드 환경 통합 관리, 자동화된 리소스 프로비저닝, 실시간 모니터링 및 알림 시스템, 비용 최적화 도구, 그리고 보안 컴플라이언스 체크 기능 등이 있습니다.";
-      const words = fullResponse.split("");
-
-      // 첫 메시지 추가
-      const initialMessage: Message = {
-        id: botMessageId,
-        text: "",
-        sender: "bot",
-        timestamp: new Date(),
-        isStreaming: true,
-      };
-      setMessages((prev) => [...prev, initialMessage]);
-
-      // 글자 하나씩 추가
-      let currentText = "";
-      words.forEach((word, index) => {
-        setTimeout(() => {
-          currentText += word;
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.id === botMessageId
-                ? {
-                    ...msg,
-                    text: currentText,
-                    isStreaming: index < words.length - 1,
-                  }
-                : msg
-            )
-          );
-        }, index * 30); // 30ms마다 한 글자씩
-      });
-    }, 800);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
