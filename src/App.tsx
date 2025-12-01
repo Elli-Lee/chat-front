@@ -3,6 +3,7 @@ import { Send, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import logo from "./assets/logo.png";
 import { useChat } from "./hooks/useChat";
+import { MarkdownContent } from "./components/MarkdownContent";
 
 export default function App() {
   const { messages, isTyping, sendMessage } = useChat();
@@ -360,8 +361,8 @@ export default function App() {
 
                           {/* Message content */}
                           <div className="flex-1 min-w-0">
-                            <p className="text-slate-800 whitespace-pre-wrap wrap-break-word leading-relaxed">
-                              {message.text}
+                            <div className="text-slate-800 leading-relaxed">
+                              <MarkdownContent content={message.text} />
                               {message.isStreaming && (
                                 <motion.span
                                   className="inline-block w-1 h-4 bg-[#001f5c] ml-0.5"
@@ -372,7 +373,7 @@ export default function App() {
                                   }}
                                 />
                               )}
-                            </p>
+                            </div>
                             {!message.isStreaming && message.text && (
                               <div className="flex items-center gap-2 mt-2">
                                 <span className="text-xs text-slate-400">
