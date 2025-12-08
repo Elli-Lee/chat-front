@@ -6,7 +6,7 @@ import { useChat } from "./hooks/useChat";
 import { MarkdownContent } from "./components/MarkdownContent";
 
 export default function App() {
-  const { messages, isTyping, isStreaming, sendMessage, stopStreaming } = useChat();
+  const { messages, isTyping, isStreaming, sendMessage, stopStreaming, resetChat } = useChat();
   const [inputValue, setInputValue] = useState("");
   const [chatStarted, setChatStarted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -37,6 +37,7 @@ export default function App() {
   };
 
   const handleGoHome = () => {
+    resetChat(); // 스트리밍 중지 및 채팅 초기화
     setChatStarted(false);
     setInputValue("");
   };

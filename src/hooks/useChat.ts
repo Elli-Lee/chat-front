@@ -137,12 +137,32 @@ export const useChat = () => {
     });
   }, []);
 
+  const resetChat = useCallback(() => {
+    // 스트리밍 중이면 중지
+    if (abortRef.current) {
+      abortRef.current();
+      abortRef.current = null;
+    }
+    setIsTyping(false);
+    setIsStreaming(false);
+    // 초기 메시지로 리셋
+    setMessages([
+      {
+        id: "1",
+        text: "안녕하세요! 오케스트로 제품 요구사항 검색 챗봇입니다. 무엇을 도와드릴까요?",
+        sender: "bot",
+        timestamp: new Date(),
+      },
+    ]);
+  }, []);
+
   return {
     messages,
     isTyping,
     isStreaming,
     sendMessage,
     stopStreaming,
+    resetChat,
   };
 };
 
