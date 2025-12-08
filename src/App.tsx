@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, Square } from "lucide-react";
+import { Send, Sparkles, Square, Home } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import logo from "./assets/logo.png";
 import { useChat } from "./hooks/useChat";
@@ -34,6 +34,11 @@ export default function App() {
 
   const handleStop = () => {
     stopStreaming();
+  };
+
+  const handleGoHome = () => {
+    setChatStarted(false);
+    setInputValue("");
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -277,36 +282,52 @@ export default function App() {
           <div className="h-full bg-white/40 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/50 flex flex-col overflow-hidden">
             {/* Header */}
             <div className="relative px-8 pt-6 pb-4">
-              <div className="relative flex items-center gap-3">
-                {/* Logo */}
-                <motion.div
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 15,
-                    delay: 0.1,
-                  }}
-                  className="relative"
-                >
-                  <img
-                    src={logo}
-                    alt="Okestro Logo"
-                    className="w-9 h-9 object-contain"
-                  />
-                </motion.div>
+              <div className="relative flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {/* Logo */}
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 15,
+                      delay: 0.1,
+                    }}
+                    className="relative"
+                  >
+                    <img
+                      src={logo}
+                      alt="Okestro Logo"
+                      className="w-9 h-9 object-contain"
+                    />
+                  </motion.div>
 
-                {/* Title */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
+                  {/* Title */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                  >
+                    <h1 className="text-lg bg-linear-to-r from-[#001f5c] to-[#003087] bg-clip-text text-transparent">
+                      OKESTRO
+                    </h1>
+                  </motion.div>
+                </div>
+
+                {/* Home Button */}
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3, duration: 0.4 }}
+                  onClick={handleGoHome}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="p-2 transition-all"
+                  title="홈으로 돌아가기"
                 >
-                  <h1 className="text-lg bg-linear-to-r from-[#001f5c] to-[#003087] bg-clip-text text-transparent">
-                    OKESTRO
-                  </h1>
-                </motion.div>
+                  <Home className="w-6 h-6 text-[#001f5c]/70 hover:text-[#001f5c] transition-colors" />
+                </motion.button>
               </div>
             </div>
 
