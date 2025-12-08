@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles } from "lucide-react";
+import { Send, Sparkles, Square } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import logo from "./assets/logo.png";
 import { useChat } from "./hooks/useChat";
 import { MarkdownContent } from "./components/MarkdownContent";
 
 export default function App() {
-  const { messages, isTyping, sendMessage } = useChat();
+  const { messages, isTyping, isStreaming, sendMessage, stopStreaming } = useChat();
   const [inputValue, setInputValue] = useState("");
   const [chatStarted, setChatStarted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -20,7 +20,7 @@ export default function App() {
   }, [messages]);
 
   const handleSend = () => {
-    if (inputValue.trim() === "") return;
+    if (inputValue.trim() === "" || isStreaming) return;
 
     // 첫 메시지일 경우 채팅 시작
     if (!chatStarted) {
@@ -30,6 +30,10 @@ export default function App() {
     // API를 통해 메시지 전송
     sendMessage(inputValue);
     setInputValue("");
+  };
+
+  const handleStop = () => {
+    stopStreaming();
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -245,13 +249,17 @@ export default function App() {
                   autoFocus
                 />
                 <motion.button
-                  onClick={handleSend}
-                  disabled={inputValue.trim() === ""}
+                  onClick={isStreaming ? handleStop : handleSend}
+                  disabled={!isStreaming && inputValue.trim() === ""}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="bg-linear-to-br from-[#001f5c] to-[#003087] text-white p-3.5 rounded-[20px] shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
                 >
-                  <Send className="w-5 h-5" />
+                  {isStreaming ? (
+                    <Square className="w-5 h-5" fill="currentColor" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
                 </motion.button>
               </div>
             </motion.div>
@@ -451,13 +459,17 @@ export default function App() {
                     style={{ maxHeight: "120px" }}
                   />
                   <motion.button
-                    onClick={handleSend}
-                    disabled={inputValue.trim() === ""}
+                    onClick={isStreaming ? handleStop : handleSend}
+                    disabled={!isStreaming && inputValue.trim() === ""}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="bg-linear-to-br from-[#001f5c] to-[#003087] text-white p-3 rounded-[16px] shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
                   >
-                    <Send className="w-5 h-5" />
+                    {isStreaming ? (
+                      <Square className="w-5 h-5" fill="currentColor" />
+                    ) : (
+                      <Send className="w-5 h-5" />
+                    )}
                   </motion.button>
                 </div>
               </div>

@@ -98,6 +98,8 @@ export const sendChatMessage = (
       } catch (error) {
         if (error instanceof Error && error.name === "AbortError") {
           console.log("Request cancelled");
+          // 중단 시에도 onComplete를 호출하여 현재까지 받은 내용을 유지
+          onComplete();
         } else {
           onError(
             error instanceof Error ? error : new Error("Stream read error")
@@ -108,6 +110,8 @@ export const sendChatMessage = (
     .catch((error) => {
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Request cancelled");
+        // 중단 시에도 onComplete를 호출하여 현재까지 받은 내용을 유지
+        onComplete();
       } else {
         onError(error instanceof Error ? error : new Error("Network error"));
       }

@@ -19,6 +19,7 @@ export const useChat = () => {
     },
   ]);
   const [isTyping, setIsTyping] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
   const abortRef = useRef<(() => void) | null>(null);
 
   const sendMessage = useCallback((userMessage: string) => {
@@ -37,6 +38,7 @@ export const useChat = () => {
 
     setMessages((prev) => [...prev, userMsg]);
     setIsTyping(true);
+    setIsStreaming(true);
 
     // 봇 메시지 ID 미리 생성
     const botMessageId = (Date.now() + 1).toString();
@@ -61,29 +63,42 @@ export const useChat = () => {
           };
           setMessages((prev) => [...prev, initialMessage]);
         } else {
-          // 이후 메시지 - 기존 메시지 업데이트
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.id === botMessageId
-                ? { ...msg, text: streamedText, isStreaming: true }
-                : msg
-            )
-          );
+          // 이후 메시지 - 마지막 메시지만 업데이트 (성능 최적화)
+          setMessages((prev) => {
+            const newMessages = [...prev];
+            const lastIndex = newMessages.length - 1;
+            if (lastIndex >= 0 && newMessages[lastIndex].id === botMessageId) {
+              newMessages[lastIndex] = {
+                ...newMessages[lastIndex],
+                text: streamedText,
+                isStreaming: true,
+              };
+            }
+            return newMessages;
+          });
         }
       },
       // onComplete: 스트리밍 완료
       () => {
         setIsTyping(false);
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === botMessageId ? { ...msg, isStreaming: false } : msg
-          )
-        );
+        setIsStreaming(false);
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          const lastIndex = newMessages.length - 1;
+          if (lastIndex >= 0 && newMessages[lastIndex].id === botMessageId) {
+            newMessages[lastIndex] = {
+              ...newMessages[lastIndex],
+              isStreaming: false,
+            };
+          }
+          return newMessages;
+        });
         abortRef.current = null;
       },
       // onError: 에러 처리
       (error: Error) => {
         setIsTyping(false);
+        setIsStreaming(false);
         console.error("Chat error:", error);
 
         // 에러 메시지 추가
@@ -101,10 +116,33 @@ export const useChat = () => {
     abortRef.current = abort;
   }, []);
 
+  const stopStreaming = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current();
+      abortRef.current = null;
+    }
+    setIsTyping(false);
+    setIsStreaming(false);
+    // 현재 스트리밍 중인 메시지의 isStreaming을 false로 변경 (마지막 메시지만 체크)
+    setMessages((prev) => {
+      const newMessages = [...prev];
+      const lastIndex = newMessages.length - 1;
+      if (lastIndex >= 0 && newMessages[lastIndex].isStreaming) {
+        newMessages[lastIndex] = {
+          ...newMessages[lastIndex],
+          isStreaming: false,
+        };
+      }
+      return newMessages;
+    });
+  }, []);
+
   return {
     messages,
     isTyping,
+    isStreaming,
     sendMessage,
+    stopStreaming,
   };
 };
 
