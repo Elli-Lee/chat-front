@@ -9,7 +9,9 @@ export default function App() {
   const { messages, isTyping, isStreaming, sendMessage, stopStreaming, resetChat } = useChat();
   const [inputValue, setInputValue] = useState("");
   const [chatStarted, setChatStarted] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -18,6 +20,22 @@ export default function App() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // 스크롤 감지
+  useEffect(() => {
+    const handleScroll = () => {
+      if (messagesContainerRef.current) {
+        const scrollTop = messagesContainerRef.current.scrollTop;
+        setIsScrolled(scrollTop > 10);
+      }
+    };
+
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [chatStarted]);
 
   const handleSend = () => {
     if (inputValue.trim() === "" || isStreaming) return;
@@ -333,7 +351,18 @@ export default function App() {
             </div>
 
             {/* Messages Container */}
-            <div className="flex-1 overflow-y-auto px-8 pb-6 py-4 space-y-8">
+            <div className="flex-1 relative overflow-hidden">
+              {/* Scroll Depth Shadow - Overlay */}
+              <div
+                className={`absolute top-0 left-0 right-0 h-8 bg-linear-to-b from-white/60 to-transparent pointer-events-none z-10 transition-opacity duration-300 ${
+                  isScrolled ? "opacity-100" : "opacity-0"
+                }`}
+              />
+              
+              <div
+                ref={messagesContainerRef}
+                className="h-full overflow-y-auto px-8 pb-6 py-4 space-y-8"
+              >
               <AnimatePresence>
                 {messages.map((message, index) => (
                   <motion.div
@@ -465,6 +494,7 @@ export default function App() {
                 </motion.div>
               )}
               <div ref={messagesEndRef} />
+              </div>
             </div>
 
             {/* Input Area */}
